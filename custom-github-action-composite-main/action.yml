@@ -1,0 +1,25 @@
+name: "Custom GitHub Action Composite demo"
+description: "Demo of a custom GitHub Action Composite"
+
+inputs:
+  who-to-greet:
+    description: "The name to say hello to"
+    required: true
+    default: "World"
+
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+    value: ${{ steps.hello-script.outputs.time }}
+
+runs:
+  using: "composite"
+  steps:
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - name: Call script
+      id: hello-script
+      run: hello.sh
+      shell: bash
+      env:
+        NAME: ${{ inputs.who-to-greet }}     
